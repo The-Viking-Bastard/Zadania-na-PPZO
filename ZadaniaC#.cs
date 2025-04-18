@@ -2,119 +2,154 @@ using System;
 
 class Program
 {
+    static void Main()
+    {
+        while (true)
+        {
+            Console.WriteLine("\n--- MENU ---");
+            Console.WriteLine("1: Kalkulator");
+            Console.WriteLine("2: Konwerter temperatur");
+            Console.WriteLine("3: Średnia ocen ucznia");
+            Console.WriteLine("0: Zakończ Program");
+            Console.Write("Wybierz opcję: ");
+            string wybor = Console.ReadLine();
+
+            switch (wybor)
+            {
+                case "1":
+                    Kalkulator();
+                    break;
+                case "2":
+                    KonwerterTemperatur();
+                    break;
+                case "3":
+                    SredniaOcen();
+                    break;
+                case "0":
+                    Console.WriteLine("Zamykanie programu...");
+                    return;
+                default:
+                    Console.WriteLine("Nieznana opcja! Wybierz 1, 2, 3 lub 0.");
+                    break;
+            }
+        }
+    }
+
     static void Kalkulator()
     {
-        Console.Write("Podaj pierwszą liczbę: ");
-        double a = Convert.ToDouble(Console.ReadLine());
-
-        Console.Write("Podaj drugą liczbę: ");
-        double b = Convert.ToDouble(Console.ReadLine());
-
-        Console.Write("Wybierz operację (+, -, *, /): ");
-        string op = Console.ReadLine();
-
-        double wynik;
-
-        switch (op)
+        try
         {
-            case "+":
+            Console.Write("Podaj pierwszą liczbę: ");
+            double a = double.Parse(Console.ReadLine());
+
+            Console.Write("Podaj drugą liczbę: ");
+            double b = double.Parse(Console.ReadLine());
+
+            Console.Write("Wybierz operację (+, -, *, /): ");
+            string op = Console.ReadLine();
+
+            double wynik;
+
+            if (op == "+")
                 wynik = a + b;
-                Console.WriteLine("Wynik: " + wynik);
-                break;
-            case "-":
+            else if (op == "-")
                 wynik = a - b;
-                Console.WriteLine("Wynik: " + wynik);
-                break;
-            case "*":
+            else if (op == "*")
                 wynik = a * b;
-                Console.WriteLine("Wynik: " + wynik);
-                break;
-            case "/":
-                if (b != 0)
+            else if (op == "/")
+            {
+                if (b == 0)
                 {
-                    wynik = a / b;
-                    Console.WriteLine("Wynik: " + wynik);
+                    Console.WriteLine("Błąd: Nie można dzielić przez zero!");
+                    return;
                 }
-                else
-                {
-                    Console.WriteLine("Błąd: Dzielenie przez zero!");
-                }
-                break;
-            default:
-                Console.WriteLine("Nieznana operacja");
-                break;
+                wynik = a / b;
+            }
+            else
+            {
+                Console.WriteLine("Nieznana operacja!");
+                return;
+            }
+
+            Console.WriteLine("Wynik: " + wynik);
+        }
+        catch
+        {
+            Console.WriteLine("Błąd: Wprowadź poprawne liczby!");
         }
     }
 
     static void KonwerterTemperatur()
     {
-        Console.Write("Wybierz kierunek konwersji (C/F): ");
-        string kierunek = Console.ReadLine().ToUpper();
+        try
+        {
+            Console.Write("Wybierz konwersję (Celsjusz → Fahrenheit wpisz C, Fahrenheit → Celsjusz wpisz F): ");
+            string typ = Console.ReadLine().ToUpper();
 
-        Console.Write("Podaj temperaturę: ");
-        double temp = Convert.ToDouble(Console.ReadLine());
+            Console.Write("Podaj temperaturę: ");
+            double temp = double.Parse(Console.ReadLine());
 
-        if (kierunek == "C")
-        {
-            double wynik = temp * 1.8 + 32;
-            Console.WriteLine($"{temp}°C = {wynik:F2}°F");
+            if (typ == "C")
+            {
+                double wynik = temp * 1.8 + 32;
+                Console.WriteLine($"{temp}°C = {wynik:F2}°F");
+            }
+            else if (typ == "F")
+            {
+                double wynik = (temp - 32) / 1.8;
+                Console.WriteLine($"{temp}°F = {wynik:F2}°C");
+            }
+            else
+            {
+                Console.WriteLine("Nieznany typ konwersji!");
+            }
         }
-        else if (kierunek == "F")
+        catch
         {
-            double wynik = (temp - 32) / 1.8;
-            Console.WriteLine($"{temp}°F = {wynik:F2}°C");
-        }
-        else
-        {
-            Console.WriteLine("Nieznany kierunek konwersji");
+            Console.WriteLine("Błąd: Wprowadź poprawne dane!");
         }
     }
 
     static void SredniaOcen()
     {
-        Console.Write("Podaj liczbę ocen: ");
-        int n = Convert.ToInt32(Console.ReadLine());
-
-        double suma = 0;
-        for (int i = 0; i < n; i++)
+        try
         {
-            Console.Write($"Podaj ocenę {i + 1}: ");
-            double ocena = Convert.ToDouble(Console.ReadLine());
-            suma += ocena;
+            Console.Write("Ile ocen chcesz podać? ");
+            int n = int.Parse(Console.ReadLine());
+
+            if (n <= 0)
+            {
+                Console.WriteLine("Błąd: Liczba ocen musi być większa od 0!");
+                return;
+            }
+
+            double suma = 0;
+
+            for (int i = 0; i < n; i++)
+            {
+                Console.Write($"Podaj ocenę {i + 1}: ");
+                double ocena = double.Parse(Console.ReadLine());
+
+                if (ocena < 1 || ocena > 6)
+                {
+                    Console.WriteLine("Błąd: Ocena musi być w przedziale 1–6");
+                    return;
+                }
+
+                suma += ocena;
+            }
+
+            double srednia = suma / n;
+            Console.WriteLine($"Średnia: {srednia:F2}");
+
+            if (srednia >= 3.0)
+                Console.WriteLine("Uczeń zdał.");
+            else
+                Console.WriteLine("Uczeń nie zdał.");
         }
-
-        double srednia = suma / n;
-        Console.WriteLine($"Średnia: {srednia:F2}");
-
-        if (srednia >= 3.0)
-            Console.WriteLine("Uczeń zdał.");
-        else
-            Console.WriteLine("Uczeń nie zdał.");
-    }
-
-    static void Main()
-    {
-        Console.WriteLine("Wybierz zadanie:");
-        Console.WriteLine("1 - Kalkulator");
-        Console.WriteLine("2 - Konwerter temperatur");
-        Console.WriteLine("3 - Średnia ocen");
-        Console.Write("Wpisz numer zadania: ");
-        string wybor = Console.ReadLine();
-
-        switch (wybor)
+        catch
         {
-            case "1":
-                Kalkulator();
-                break;
-            case "2":
-                KonwerterTemperatur();
-                break;
-            case "3":
-                SredniaOcen();
-                break;
-            default:
-                Console.WriteLine("Nieprawidłowy wybór");
-                break;
+            Console.WriteLine("Błąd: Wprowadź poprawne liczby!");
         }
     }
 }
